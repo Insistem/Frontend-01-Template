@@ -29,8 +29,7 @@
 
  
  #作业提交
-学号：G20200447010520
-姓名：马鹏阳
-班级：5班
-小组：1组
-作业&总结链接：https://github.com/Insistem/Frontend-01-Template/tree/master/week01
+#学号：G20200447010520
+#班级：5班
+#小组：6组
+#作业&总结链接：https://github.com/Insistem/Frontend-01-Template/tree/master/week02
