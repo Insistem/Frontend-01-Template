@@ -56,24 +56,42 @@ for(var i = 0; i < 10; i++) {
 ## 0425总结
 ### statement - 语句
 ### types - 数据类型
-#### Object
+#### Object的来源 - 对象，保罗万象的一种东西
+- 对象的三要素： 唯一性，状态，行为（状态的改变）
+- JS中的对象三要素： 封装，继承，多态
+- *面向对象过程中对对象的抽象训练*：看一个class抽象的好不好，看他的方法是不是在改变自身的状态，因为只有改变状态才是这个对象的行为
+- JS中面向对象的模型
+#### 作业： 整理出JS标准中所有特殊的对象(我们没办法模拟出来的)及特殊对象的属性，做一个总结
+- 对应文档中的 p133 9.4 Built-in Exotic Object Internal Methods and Slots 异于寻常的对象
+- Array[[length]]
+- Object.prototype[[setPrototypeOf]]
+
+#### UTF8的讲解 ？？？对应视频中03：04：36的位置
+- `'美'.codePointAt(0).toString(2)` ：先获得指定位置字符的Unicode码点值，再转成二进制
+- `codePointAt` 与 `charCodeAt`的区别
 
 
 
 ### tips
 - `for(let i=0;i<10;i++){ let i = 1; console.log(i)}` 这就相当于`{let i=0 {let i=1; console.log(i)} console.log(i)}` 是相当于两个作用域
 - 作用域与上下文的区别
- - 作用域是：源代码中文本分割的区域，文本域，这个变量作用的范围
- - 执行上下文是：用户的浏览器内存中（JS引擎）变量的环境
+  - 作用域是：源代码中文本分割的区域，文本域，这个变量作用的范围
+  - 执行上下文是：用户的浏览器内存中（JS引擎）变量的环境
 - Generator与async的关系，作用？
   - 早期使用Generator来模拟await的实现，但是两者没有半毛钱关系，Generator用来写一些需要多步返回多个值的函数
 - var的诡异之处
-  1. 如果有var不建议写在任何语句的子结构里面，例如with中，一定要写在function的范围内的最前面 `if(false){var x = 1}` 或者 `return var x=3` 这些var都会影响前面的x变量
+  1. 如果有var不建议写在任何语句的子结构里面，例如with中，建议var 最好写在函数内最前面或变量第一次出现的地方，一定要写在function的范围内的最前面
+  2. `if(false){var x = 1}` 或者 `return var x=3` 这些var都会影响前面的x变量
+- 封装，内聚，复用，解耦
+
+
+### 推荐书目
+- 《面向对象分析与设计》
 
 
 
 
-  ### js代码示例
+### js代码示例
   ```js
   // Generator的使用
   function* foo() {
