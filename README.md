@@ -33,3 +33,10 @@
 #班级：5班
 #小组：6组
 #作业&总结链接：https://github.com/Insistem/Frontend-01-Template/tree/master/week02
+
+## 术语汇总
+英文|中文|备注
+--|--|--
+lineTerminator|换行符|线路终结者
+Atom|原子
+
