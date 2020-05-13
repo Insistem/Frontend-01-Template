@@ -1,4 +1,10 @@
 # 每周总结可以写在这里
+
+#### 作业： 
+整理出JS标准中所有特殊的对象(我们没办法模拟出来的)及特殊对象的属性，做一个总结
+- 对应文档中的 p133 9.4 Built-in Exotic Object Internal Methods and Slots 异于寻常的对象
+
+
 ## 0423总结
 ## 解答上节课的问题
 - 为什么 0.1 0.2 无法准确表示出来，浮点数精度损失 - 理解float浮点数在内存中的表示方法
@@ -61,8 +67,6 @@ for(var i = 0; i < 10; i++) {
 - JS中的对象三要素： 封装，继承，多态
 - *面向对象过程中对对象的抽象训练*：看一个class抽象的好不好，看他的方法是不是在改变自身的状态，因为只有改变状态才是这个对象的行为
 - JS中面向对象的模型
-#### 作业： 整理出JS标准中所有特殊的对象(我们没办法模拟出来的)及特殊对象的属性，做一个总结
-- 对应文档中的 p133 9.4 Built-in Exotic Object Internal Methods and Slots 异于寻常的对象
 - Array[[length]]
 - Object.prototype[[setPrototypeOf]]
 

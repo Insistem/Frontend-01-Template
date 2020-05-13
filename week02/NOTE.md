@@ -1,5 +1,10 @@
 # 每周总结可以写在这里
 正则真是博大精深
+### 作业
+写一个正则表达式 匹配所有 Number 直接量
+写一个 UTF-8 Encoding 的函数
+写一个正则表达式，匹配所有的字符串直接量，单引号和双引号
+完成一篇本周的学习总结
 
 ## JavaScript体系
 - Atom
@@ -12,6 +17,13 @@
 ## 0418
 
 ## UTF8 编码+解码
+
+## 思考问题
+### Unicode与utf8的区别
+- Unicode是字符集 UCS（Universal Multiple-Octet Coded Character Set） 俗称 Unicode
+- utf8是编码规则 UCS transfer format
+- 参考：https://www.zhihu.com/question/23374078 / https://www.softwhy.com/article-9920-1.html
+
 
 ```
 const encodeUtf8 = (str) => {
