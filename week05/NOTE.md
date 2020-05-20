@@ -1,12 +1,31 @@
 # 每周总结可以写在这里
 
-## 0507
+## 0507 - 重学JS|结构化（二）
+
+结构化程序设计
+全局的变量
+The Global Object  Chapter - 18.0
+### 作业
+G6可视化，全局变量，realm中的对象
+
+### 函数调用 
+execution context
+> An execution context is purely a specification mechanism and need not correspond to any particular artefact of an ECMAScript implementation. It is impossible for ECMAScript code to directly access or observe an execution context
+
+execution context stack 调用栈
+> The execution context stack is used to track execution contexts. The running execution context is always the top element of this stack. A new execution context is created whenever control is transferred from the executable code associated with the currently running execution context to executable code that is not associated with that execution context. The newly created execution context is pushed onto the stack and becomes the running execution context.
 
 
+- JS Context =>Realm 上下文 包含了一个 Global Object
 
-## 0509
+- 宏任务
+- 微任务
+- 函数调用（Execution Context）
+- 语句、声明
+- 表达式
+- 直接量/变量/this...
 
-# 一、JS中的Realm
+ 一、JS中的Realm
 
 - JS Context => Realm
 - 宏任务
@@ -20,7 +39,37 @@
 
 在JS中，函数表达式和对象直接量均会创建对象。使用”.“做隐式转换也会创建对象。这些对象也是有原型。
 
-# 二、浏览器工作原理
+## 0509
+### 优秀作业讲解
+#### 第三周作业：stringToNumber
+知识点 - 正则的运用
+`'s123r'.match(/s(123)r/)` 这样匹配的第二项就是括号括起来的内容，如果不想匹配到可以这么写
+`'s123r'.match(/s(?:123)r/)`
+
+### 二、浏览器工作原理
+
+ISO-OSI 七层网络模型
+应用
+表示
+会话     --    应用层   --  HTTP、HTTPS         -- require('http')
+传输     --    传输层   --  TCP、UDP            -- require('net')
+网络     --    网络层   --  IPv4 IPv6
+数据链路 --    数据链路  -- mac地址
+物理层   --    物理层   --  光纤
+
+TCP/IP的一些基础知识
+TCP：
+- 流
+- 端口
+- require('net')
+IP:
+- 包
+- IP地址
+- libnet/libpcap 这一层只能用C++访问到
+
+### 用node中的net模块(发送TCP请求)来模拟HTTP
+首先了解下HTTP标准 - http RFC2616  http1.1
+http是通过文本发送的，不是二进制
 
 如题：输入URl浏览器会做什么？
 

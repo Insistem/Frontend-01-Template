@@ -28,11 +28,12 @@
  如果对 Git 和 GitHub 不太了解，请参考 [Git 官方文档](https://git-scm.com/book/zh/v2) 或者极客时间的[《玩转 Git 三剑客》](https://time.geekbang.org/course/intro/145)视频课程。
 
  
- #作业提交
+#作业提交
 #学号：G20200447010520
+#姓名：马鹏阳
 #班级：5班
 #小组：6组
-#作业&总结链接：https://github.com/Insistem/Frontend-01-Template/tree/master/week02
+#作业&总结链接：https://github.com/Insistem/Frontend-01-Template/tree/master/week06
 
 ## 术语汇总
 英文|中文|备注
