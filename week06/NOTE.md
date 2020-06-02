@@ -9,28 +9,13 @@
 
 > 在 pattern 完全未知的情况下，我们有两个难点：1. 根据字符生成不同的状态机；2. 重复搜索（有重复的状态时，可以不用重新从 start 状态机开始匹配。）
 
-用 KMP 的思想来解决第二个问题。我写了个学习文章可以参一下[Doge] https://www.yuque.com/wendraw/fe/fsm#fopmw
+用 KMP 的思想来解决第二个问题。我写了个学习文章可以参一下[Doge] (https://www.yuque.com/wendraw/fe/fsm#fopmw)
 
 作业
 实现‘abababx’的状态机
 
 ### html解析
 
-html标准
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 05-16
 解析请求回来的html代码
 字节流-->状态机-->词token-->栈-->DOM树
 
@@ -63,6 +48,10 @@ HTML Parse
 第七步——文本节点
 • 文本节点与自封闭标签处理类似
 • 多个文本节点需要合并
+
+
+
+## 05-16
 
 
 css computing

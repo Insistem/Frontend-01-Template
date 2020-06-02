@@ -1,19 +1,9 @@
 /*
-为什么会出现bad request 的问题
- 1. client.write 中需要严格的空格和`\r\n`，按照规范的HTTP报头报文来写, 请求头跟请求体之间多一个`\r\n`
- 2. 缺少`Content-Length`字段
-content-type 的四种常见类型
-- application/json
-- text/html
-- application/x-www-form-urlencoded
-- multipart/form-data
-
-encodeURIComponent()的使用， 会将汉字转为了二进制
-new Buffer('马鹏阳') ==> <Buffer e9 a9 ac e9 b9 8f e9 98 b3>
-console.log(`?x=${encodeURIComponent('马鹏阳')}`); ==> ?x=%E9%A9%AC%E9%B9%8F%E9%98%B3
+在原来的基础上增加 解析HTML的功能
 */
 
 const net = require('net');
+const parse = require('./parse.js')
 
 class Request {
     // method, url = host + post + path 
@@ -252,48 +242,7 @@ void async function () {
     })
 
     let res = await request.send()
+    let resBody = parse.parseHTML(res.body)
     console.log('res', res)
 }()
 
-
-
-/* net 自己传header版本
-const client = net.createConnection({
-    host: '127.0.0.1',
-    port: 8088
-}, () => {
-    // 'connect' listener.
-    console.log('connected to server!');
-
-    let request = new Request({
-        method: "POST",
-        path: "/",
-        host: "127.0.0.1",
-        port: 8088,
-        headers: {
-            ["X-Foo2"]: "customed"
-        },
-        body: {
-            name: "mpy"
-        }
-    })
-    console.log('11', request.toString())
-    client.write(request.toString())
-
-
-    client.write('POST / HTTP/1.1\r\n');
-    client.write('HOST: 127.0.0.1\r\n');
-    client.write('Content-Type: application/x-www-form-urlencoded\r\n');
-    client.write('Content-Length: 21\r\n');
-    client.write('\r\n');
-    client.write('field1=aaa&code=x%3D1');
-
-});
-client.on('data', (data) => {
-    console.log(data.toString());
-    client.end();
-});
-client.on('end', () => {
-    console.log('disconnected from server');
-});
-*/
