@@ -1,0 +1,479 @@
+{
+    "type": "stylesheet",
+    "stylesheet": {
+         "rules": [
+              {
+                   "type": "rule",
+                   "selectors": [
+                        ".mainWrapper"
+                   ],
+                   "declarations": [
+                        {
+                             "type": "declaration",
+                             "property": "margin",
+                             "value": "20px",
+                             "position": {
+                                  "start": {
+                                       "line": 3,
+                                       "column": 7
+                                  },
+                                  "end": {
+                                       "line": 3,
+                                       "column": 19
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "border-top",
+                             "value": "10px",
+                             "position": {
+                                  "start": {
+                                       "line": 4,
+                                       "column": 7
+                                  },
+                                  "end": {
+                                       "line": 4,
+                                       "column": 23
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "display",
+                             "value": "flex",
+                             "position": {
+                                  "start": {
+                                       "line": 5,
+                                       "column": 7
+                                  },
+                                  "end": {
+                                       "line": 5,
+                                       "column": 20
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "width",
+                             "value": "500px",
+                             "position": {
+                                  "start": {
+                                       "line": 6,
+                                       "column": 7
+                                  },
+                                  "end": {
+                                       "line": 6,
+                                       "column": 19
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "height",
+                             "value": "500px",
+                             "position": {
+                                  "start": {
+                                       "line": 6,
+                                       "column": 21
+                                  },
+                                  "end": {
+                                       "line": 6,
+                                       "column": 34
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "flex-wrap",
+                             "value": "wrap",
+                             "position": {
+                                  "start": {
+                                       "line": 7,
+                                       "column": 7
+                                  },
+                                  "end": {
+                                       "line": 7,
+                                       "column": 22
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "background-color",
+                             "value": "rgb(233,233,233)",
+                             "position": {
+                                  "start": {
+                                       "line": 8,
+                                       "column": 7
+                                  },
+                                  "end": {
+                                       "line": 8,
+                                       "column": 41
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "justify-content",
+                             "value": "space-around",
+                             "position": {
+                                  "start": {
+                                       "line": 9,
+                                       "column": 7
+                                  },
+                                  "end": {
+                                       "line": 9,
+                                       "column": 36
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "align-content",
+                             "value": "space-between",
+                             "position": {
+                                  "start": {
+                                       "line": 10,
+                                       "column": 7
+                                  },
+                                  "end": {
+                                       "line": 10,
+                                       "column": 35
+                                  }
+                             }
+                        }
+                   ],
+                   "position": {
+                        "start": {
+                             "line": 2,
+                             "column": 5
+                        },
+                        "end": {
+                             "line": 11,
+                             "column": 6
+                        }
+                   }
+              },
+              {
+                   "type": "rule",
+                   "selectors": [
+                        ".mainWrapper .left"
+                   ],
+                   "declarations": [
+                        {
+                             "type": "declaration",
+                             "property": "width",
+                             "value": "200px",
+                             "position": {
+                                  "start": {
+                                       "line": 12,
+                                       "column": 26
+                                  },
+                                  "end": {
+                                       "line": 12,
+                                       "column": 38
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "background-color",
+                             "value": "rgb(11,222,33)",
+                             "position": {
+                                  "start": {
+                                       "line": 12,
+                                       "column": 40
+                                  },
+                                  "end": {
+                                       "line": 12,
+                                       "column": 72
+                                  }
+                             }
+                        }
+                   ],
+                   "position": {
+                        "start": {
+                             "line": 12,
+                             "column": 5
+                        },
+                        "end": {
+                             "line": 12,
+                             "column": 75
+                        }
+                   }
+              },
+              {
+                   "type": "rule",
+                   "selectors": [
+                        ".mainWrapper .right"
+                   ],
+                   "declarations": [
+                        {
+                             "type": "declaration",
+                             "property": "width",
+                             "value": "50px",
+                             "position": {
+                                  "start": {
+                                       "line": 13,
+                                       "column": 27
+                                  },
+                                  "end": {
+                                       "line": 13,
+                                       "column": 38
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "height",
+                             "value": "50px",
+                             "position": {
+                                  "start": {
+                                       "line": 13,
+                                       "column": 40
+                                  },
+                                  "end": {
+                                       "line": 13,
+                                       "column": 52
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "background-color",
+                             "value": "rgb(27,239,208)",
+                             "position": {
+                                  "start": {
+                                       "line": 13,
+                                       "column": 54
+                                  },
+                                  "end": {
+                                       "line": 13,
+                                       "column": 88
+                                  }
+                             }
+                        }
+                   ],
+                   "position": {
+                        "start": {
+                             "line": 13,
+                             "column": 5
+                        },
+                        "end": {
+                             "line": 13,
+                             "column": 89
+                        }
+                   }
+              },
+              {
+                   "type": "rule",
+                   "selectors": [
+                        "#gaga + div"
+                   ],
+                   "declarations": [
+                        {
+                             "type": "declaration",
+                             "property": "width",
+                             "value": "150px",
+                             "position": {
+                                  "start": {
+                                       "line": 14,
+                                       "column": 19
+                                  },
+                                  "end": {
+                                       "line": 14,
+                                       "column": 31
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "height",
+                             "value": "250px",
+                             "position": {
+                                  "start": {
+                                       "line": 14,
+                                       "column": 33
+                                  },
+                                  "end": {
+                                       "line": 14,
+                                       "column": 46
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "background-color",
+                             "value": "rgb(223,0,0)",
+                             "position": {
+                                  "start": {
+                                       "line": 14,
+                                       "column": 48
+                                  },
+                                  "end": {
+                                       "line": 14,
+                                       "column": 79
+                                  }
+                             }
+                        }
+                   ],
+                   "position": {
+                        "start": {
+                             "line": 14,
+                             "column": 5
+                        },
+                        "end": {
+                             "line": 14,
+                             "column": 80
+                        }
+                   }
+              },
+              {
+                   "type": "rule",
+                   "selectors": [
+                        "img + div > header ~div.last"
+                   ],
+                   "declarations": [
+                        {
+                             "type": "declaration",
+                             "property": "background-color",
+                             "value": "rgb(250,250,84)",
+                             "position": {
+                                  "start": {
+                                       "line": 15,
+                                       "column": 36
+                                  },
+                                  "end": {
+                                       "line": 15,
+                                       "column": 69
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "width",
+                             "value": "200px",
+                             "position": {
+                                  "start": {
+                                       "line": 15,
+                                       "column": 71
+                                  },
+                                  "end": {
+                                       "line": 15,
+                                       "column": 83
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "height",
+                             "value": "200px",
+                             "position": {
+                                  "start": {
+                                       "line": 15,
+                                       "column": 85
+                                  },
+                                  "end": {
+                                       "line": 15,
+                                       "column": 98
+                                  }
+                             }
+                        }
+                   ],
+                   "position": {
+                        "start": {
+                             "line": 15,
+                             "column": 5
+                        },
+                        "end": {
+                             "line": 15,
+                             "column": 101
+                        }
+                   }
+              },
+              {
+                   "type": "rule",
+                   "selectors": [
+                        ".last + div"
+                   ],
+                   "declarations": [
+                        {
+                             "type": "declaration",
+                             "property": "flex",
+                             "value": "1",
+                             "position": {
+                                  "start": {
+                                       "line": 16,
+                                       "column": 19
+                                  },
+                                  "end": {
+                                       "line": 16,
+                                       "column": 26
+                                  }
+                             }
+                        },
+                        {
+                             "type": "declaration",
+                             "property": "background-color",
+                             "value": "rgb(236,158,79)",
+                             "position": {
+                                  "start": {
+                                       "line": 16,
+                                       "column": 28
+                                  },
+                                  "end": {
+                                       "line": 16,
+                                       "column": 62
+                                  }
+                             }
+                        }
+                   ],
+                   "position": {
+                        "start": {
+                             "line": 16,
+                             "column": 5
+                        },
+                        "end": {
+                             "line": 16,
+                             "column": 63
+                        }
+                   }
+              },
+              {
+                   "type": "rule",
+                   "selectors": [
+                        "div.mainWrapper > div:not(.last)"
+                   ],
+                   "declarations": [
+                        {
+                             "type": "declaration",
+                             "property": "background-color",
+                             "value": "rgb(223,0,232)",
+                             "position": {
+                                  "start": {
+                                       "line": 17,
+                                       "column": 40
+                                  },
+                                  "end": {
+                                       "line": 17,
+                                       "column": 73
+                                  }
+                             }
+                        }
+                   ],
+                   "position": {
+                        "start": {
+                             "line": 17,
+                             "column": 5
+                        },
+                        "end": {
+                             "line": 17,
+                             "column": 74
+                        }
+                   }
+              }
+         ],
+         "parsingErrors": []
+    }
+}

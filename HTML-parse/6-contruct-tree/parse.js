@@ -1,12 +1,62 @@
-// 初始化有限状态机
-// 5 - 加入对属性值的处理
-//  每个状态机上面是处理特殊字符，没有特殊字符则进行正常操作
+/*
+6 - 将token转化为tree结构
+ 使用栈来转为tree结构
+从标签构建 DOM 树的基本技巧是使用栈。
+遇到开始标签时创建元素并入栈，遇到结束标签时出栈。
+自封闭节点可视为入栈后立刻出栈。
+任何元素的父元素是它入栈前的栈顶。
+ */
+
 
 let currentToken = {}
 let currentAttribute = null
+let currentTextNode = null
+
+let stack = [{ type: "document", children: [] }]
 
 function emit (token) {
-    console.log(token)
+    let top = stack[stack.length - 1];
+
+    if (token.type === "startTag") {
+        let element = {
+            type: "element",
+            children: [],
+            attributes: [],
+        };
+
+        element.tagName = token.tagName;
+
+        for (let p in token) {
+            if (p !== "type" && p !== "tagName") {
+                element.attributes.push({
+                    name: p,
+                    value: token[p],
+                });
+            }
+        }
+
+        top.children.push(element);
+        element.parent = top;
+
+        if (!token.isSelfClosing) stack.push(element);
+        currentTextNode = null;
+    } else if (token.type === "endTag") {
+        if (top.tagName !== token.tagName) {
+            throw new Error("Tag start end doesn't match!");
+        } else {
+            stack.pop();
+        }
+        currentTextNode = null;
+    } else if (token.type === "text") {
+        if (currentTextNode === null) {
+            currentTextNode = {
+                type: "text",
+                content: "",
+            };
+            top.children.push(currentTextNode);
+        }
+        currentTextNode.content += token.content;
+    }
 }
 
 const EOF = Symbol('EOF') // EOF: end of file 一个唯一的标识
@@ -74,7 +124,7 @@ function tagName (c) {
 function beforeAttributeName (c) {
     if (c.match(/^[\t\n\f ]$/)) {
         return beforeAttributeName
-    } else if (c === '/' || c === '>' || c === EOF) {
+    } else if (c === '/' || c === '>' || c === EOF)) {
         return afterAttributeName(c)
     } else if (c === '=') {
         // throw err
@@ -207,13 +257,13 @@ function unquoteAttributeValue (c) {
         return unquoteAttributeValue;
     }
 }
+}
 
 
 
 function selfClosingStartTag (c) {
     if (c === '>') {
         currentToken.isSelfClosing = true
-        emit(currentToken)
         return data
     } else if (c === EOF) { }
     else { }
@@ -225,4 +275,5 @@ module.exports.parseHTML = function (html) {
         state = state(c)
     }
     state = state(EOF)
+    return stack[0]
 }

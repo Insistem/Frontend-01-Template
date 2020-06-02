@@ -1,12 +1,71 @@
-// 初始化有限状态机
-// 5 - 加入对属性值的处理
-//  每个状态机上面是处理特殊字符，没有特殊字符则进行正常操作
+/*
+7 - 处理css
+将收集到的style标签中的文本内容，利用css这个npm包，转为AST Object，方便下一步处理
+ */
+
+ const css = require('css')
+
 
 let currentToken = {}
 let currentAttribute = null
+let currentTextNode = null
+
+let stack = [{ type: "document", children: [] }]
 
 function emit (token) {
-    console.log(token)
+    let top = stack[stack.length - 1];
+
+    if (token.type === "startTag") {
+        let element = {
+            type: "element",
+            children: [],
+            attributes: [],
+        };
+
+        element.tagName = token.tagName;
+
+        for (let p in token) {
+            if (p !== "type" && p !== "tagName") {
+                element.attributes.push({
+                    name: p,
+                    value: token[p],
+                });
+            }
+        }
+
+        top.children.push(element);
+        element.parent = top;
+
+        if (!token.isSelfClosing) stack.push(element);
+        currentTextNode = null;
+    } else if (token.type === "endTag") {
+        if (top.tagName !== token.tagName) {
+            throw new Error("Tag start end doesn't match!");
+        } else {
+            // -------------遇到style标签时，执行添加CSS规则的操作--------------------
+            if(top.tagName === 'style') {
+                addCSSRules(top.children[0].content)
+            }
+            stack.pop();
+        }
+        currentTextNode = null;
+    } else if (token.type === "text") {
+        if (currentTextNode === null) {
+            currentTextNode = {
+                type: "text",
+                content: "",
+            };
+            top.children.push(currentTextNode);
+        }
+        currentTextNode.content += token.content;
+    }
+}
+
+let rules = []
+function addCSSRules(text) {
+    var ast = css.parse(text)
+    console.log(JSON.stringify(ast, null,  "     "))
+    rules.push(...ast.stylesheet.rules)
 }
 
 const EOF = Symbol('EOF') // EOF: end of file 一个唯一的标识
@@ -26,7 +85,7 @@ function data (c) {
             content: c
         })
         return data
-    }
+    } 
 }
 
 function tagOpen (c) {
@@ -209,11 +268,9 @@ function unquoteAttributeValue (c) {
 }
 
 
-
 function selfClosingStartTag (c) {
     if (c === '>') {
         currentToken.isSelfClosing = true
-        emit(currentToken)
         return data
     } else if (c === EOF) { }
     else { }
@@ -225,4 +282,5 @@ module.exports.parseHTML = function (html) {
         state = state(c)
     }
     state = state(EOF)
+    return stack[0]
 }
