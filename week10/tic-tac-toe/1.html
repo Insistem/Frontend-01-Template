@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TicTacToe</title>
+  <style>
+    body {
+        width: 300px;
+        margin: 0 auto;
+    }
+    p {
+        width: 300px;
+        font-size: 20px;
+        color: #333333;
+    }
+    .cell {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        border: 1px solid white;
+        background: darkgreen;
+        vertical-align: middle;
+        line-height: 100px;
+        text-align: center;
+        font-size: 50px;
+        box-sizing: border-box;
+    }
+    .footer {
+        width: 100%;
+        height: 60px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    button {
+        border: none;
+        background: darkgreen;
+        outline: none;
+        padding: 10px 20px;
+        color: white;
+        border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+    <p>双方分别持有圈和叉两种棋子，双方交替落子，率先连成三子直线的一方获胜。</p>
+    <div id="board"></div>
+    <div class="footer">
+        <button onclick="restart()">重新开始</button>
+    </div>
+    <script>
+        let pattern = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ]
+
+        let color = 1
+        let win = false
+
+        function restart() {
+            pattern = [
+                [0, 0, 0],
+                [0, 0, 0],
+                [0, 0, 0]
+            ]
+            color = 1
+            win = false
+            show()
+        }
+
+        function show () {
+            let board = document.getElementById('board');
+            board.innerHTML = ''
+            for (let i = 0; i < 3; i ++) {
+                for (let j = 0; j < 3; j ++) {
+                    let cell = document.createElement('div');
+                    cell.innerHTML = pattern[i][j] === 2 ? '⭕️' : 
+                        pattern[i][j] === 1 ? '❌' : ''
+                    cell.className = 'cell'
+                    cell.addEventListener('click', () => userMove(j, i))
+                    board.appendChild(cell)
+                }
+                board.appendChild(document.createElement('br'))
+            }
+        }
+
+        function userMove (x, y) { 
+            if (win || pattern[y][x])
+                return
+            pattern[y][x] = color
+            if (check(pattern, color)) {
+                win = true
+                alert(color === 1 ? '❌ is winner!' : '⭕️ is winner!')
+            }
+            color = 3 - color
+            show()
+            if (!win)
+                setTimeout(() => computerMove(), 500)
+        }
+
+        function computerMove () {
+            let chioce = bestChioce(pattern, color)
+            if (chioce.point) {
+                pattern[chioce.point[1]][chioce.point[0]] = color
+            }
+            if (check(pattern, color)) {
+                win = true
+                alert(color === 1 ? '❌ is winner!' : '⭕️ is winner!')
+            }
+
+            color = 3 - color
+            show()
+        }
+
+        function check (pattern, color) {
+            for (let i = 0; i < 3; i ++) {
+                let win = true
+                for (let j = 0; j < 3; j ++) {
+                    if (pattern[i][j] !== color) {
+                        win = false
+                        break
+                    }
+                }
+                if (win) 
+                    return true
+            }
+
+            for (let i = 0; i < 3; i ++) {
+                let win = true
+                for (let j = 0; j < 3; j ++) {
+                    if (pattern[j][i] !== color) {
+                        win = false
+                        break
+                    }
+                }
+                if (win) 
+                    return true
+            }
+
+            {
+                let win = true
+                for (let j = 0; j < 3; j ++) {
+                    if (pattern[j][j] !== color) {
+                        win = false
+                        break
+                    }
+                }
+                if (win) 
+                    return true
+            }
+
+            {
+                let win = true
+                for (let j = 0; j < 3; j ++) {
+                    if (pattern[j][2 - j] !== color) {
+                        win = false
+                        break
+
+                    }
+                }
+                if (win) 
+                    return true
+            }
+
+            return false
+        }
+
+        function clone(pattern) {
+            return JSON.parse(JSON.stringify(pattern))
+        }
+
+        function willWin(pattern, color) {
+            for (let i = 0; i < 3; i ++) {
+                for (let j = 0; j < 3; j ++) {
+                    if (pattern[i][j])
+                        continue
+                    
+                    let tmp = clone(pattern)
+                    tmp[i][j] = color
+                    if (check(tmp, color))
+                        return [j, i]
+                }
+            }
+            return null
+        }
+
+        function bestChioce(pattern, color) {
+            let point = willWin(pattern, color)
+            if (point)
+                return {
+                    point: point,
+                    result: 1
+                }
+            
+            let result = -1
+
+            outer:for (let i = 0; i < 3; i ++) {
+                for (let j = 0; j < 3; j ++) {
+                    if (pattern[i][j])
+                        continue
+                    
+                    let tmp = clone(pattern)
+                    tmp[i][j] = color
+                    let opp = bestChioce(tmp, 3 - color)
+                    if (-opp.result >= result) {
+                        point = [j, i]
+                        result = -opp.result
+                    }
+
+                    if (result === 1)
+                        break outer
+                }
+            }
+
+            return {
+                point: point,
+                result: point ? result : 0
+            }
+        }
+        show()
+    </script>
+</body>
+</html>
