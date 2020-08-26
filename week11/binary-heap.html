@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>寻路</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      .cell {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: gray;
+        border-bottom: solid 1px white;
+        border-right: solid 1px white;
+        vertical-align: middle;
+      }
+
+      #container {
+        font-size: 0;
+        width: 701px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container"></div>
+    <button onclick="localStorage.map = JSON.stringify(map)">save</button>
+    <br />
+    start:
+    <br />
+    x: <input value="0" /> y: <input value="0" />
+    <br />
+    end:
+    <br />
+    x: <input value="50" /> y: <input value="50" />
+    <button onclick="run()">搜索搜索</button>
+
+    <script>
+      // 二分堆 binary heap
+      class BinaryHeap {
+        constructor(data, compare) {
+          this.data = data;
+          this.compare = compare;
+        }
+        take() {
+          if (!this.data.length) {
+            return;
+          }
+          // 默认最小时第一个
+          let min = this.data[0];
+          let i = 0;
+          // fix heap
+          while (i < this.data.length) {
+            if (i * 2 + 1 >= this.data.length) {
+              break;
+            }
+            if (i * 2 + 2 >= this.data.length) {
+              this.data[i] = this.data[i * 2 + 1];
+              i = i * 2 + 1;
+              break;
+            }
+            // left: i * 2 + 1, right: i * 2 + 2
+            if (this.compare(this.data[i * 2 + 1], this.data[i * 2 + 2]) < 0) {
+              // left > right
+              this.data[i] = this.data[i * 2 + 1];
+              // 填洞
+              i = i * 2 + 1;
+            } else {
+              // left < right
+              this.data[i] = this.data[i * 2 + 2];
+              i = i * 2 + 2;
+            }
+          }
+
+          if (i < this.data.length - 1) {
+            this.insertAt(i, this.data.pop());
+          } else {
+            this.data.pop()
+          }
+
+          return min;
+        }
+        insertAt(i, v) {
+          this.data[i] = v;
+          while (i > 0 && this.compare(v, this.data[Math.floor((i - 1) / 2)]) < 0) {
+            this.data[i] = this.data[Math.floor((i - 1) / 2)];
+            this.data[Math.floor((i - 1) / 2)] = v;
+            i = Math.floor((i - 1) / 2);
+          }
+        }
+        insert(v) {
+          this.insertAt(this.data.length, v);
+        }
+        get length() {
+          return this.data.length;
+        }
+      }
+      /**
+       * 1. 生成 1000 * 1000 的一维数组
+       **/
+
+      // const map = new Array(10001).join(0).split('');
+      var map = localStorage.map
+        ? JSON.parse(localStorage.map)
+        : new Array(10000).fill(0);
+
+      const container = document.querySelector("#container");
+
+      for (let y = 0; y < 100; y++) {
+        for (let x = 0; x < 100; x++) {
+          let cell = document.createElement("div");
+          cell.classList.add("cell");
+
+          if (map[y * 100 + x] === 1) cell.style.backgroundColor = "black";
+
+          cell.addEventListener("mouseover", () => {
+            if (mouse) {
+              if (clear) {
+                cell.style.backgroundColor = "";
+                map[y * 100 + x] = 0;
+              } else {
+                cell.style.backgroundColor = "black";
+                map[y * 100 + x] = 1;
+              }
+            }
+          });
+
+          container.appendChild(cell);
+        }
+      }
+
+      /**
+       * 2. 绘制
+       **/
+      // 是否点击了鼠标
+      let mouse = false;
+      // 是否点击了右键
+      let clear = false;
+
+      document.addEventListener("mousedown", (e) => {
+        mouse = true;
+        clear = e.button === 2;
+      });
+      document.addEventListener("mouseup", () => (mouse = false));
+
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+      const sleep = (delay) =>
+        new Promise((resolve) => {
+          setTimeout(resolve, delay);
+        });
+
+      /*
+       * 优化的方式即修数据结构
+       * 广度优先搜索，使用queue，先进先出
+       * 深度优先搜索：使用stack，后进先出
+       * A Star搜索（启发函数）：找的策略，找启发函数所推荐的点，每次吐出最小的点
+       * 动态规划
+       **/
+
+      /**
+       * 实现路径，
+       * 每次insert的时候都记录前一个点
+       **/
+
+      /**
+       * map: 一维数组
+       * start：开始的 [x, y]
+       * end：结束的 [x, y]
+       **/
+      async function findPath(map, start, end) {
+        // 避免污染
+        map = map.slice();
+
+        // 勾股定理
+        function distance([x, y]) {
+          return [x - end[0]] ** 2 + (y - end[1]) ** 2;
+        }
+
+        // 广度优先搜索
+        // let queue = [start];
+        // 深度优先搜索
+        // let stask = [start];
+        // 启发函数
+        let collection = new BinaryHeap(
+          [start],
+          (a, b) => distance(a) - distance(b)
+        );
+
+        async function insert([x, y], pre) {
+          // 边界处理
+          if (map[100 * y + x] !== 0) return;
+          if (x < 0 || y < 0 || x > 100 || y > 100) return;
+
+          // 解决重复访问, 记录上一个点同时也避免重新执行
+          map[100 * y + x] = pre;
+
+          container.children[100 * y + x].style.backgroundColor = "lightgreen";
+          await sleep(5);
+
+          collection.insert([x, y]);
+        }
+
+        while (collection.length) {
+          // 数组队列方法 pop, unshift | push, shift
+          // let [x, y] = queue.shift(); // dequeue
+          let [x, y] = collection.take(); // dequeue
+          // 深度优先搜索
+          // let [x, y] = stask.pop();
+          // 当找到end的[x,y]点表示结束
+          if (x === end[0] && y === end[1]) {
+            // 找出路径
+            let path = [];
+            while (x !== start[0] || y !== start[1]) {
+              await sleep(5);
+              container.children[100 * y + x].style.backgroundColor = "pink";
+              [x, y] = map[100 * y + x];
+              path.push([x, y]);
+            }
+            return path;
+          }
+
+          // 如果还没找到结束点，则添加当前的点的八个方向
+          await insert([x - 1, y], [x, y]);
+          await insert([x + 1, y], [x, y]);
+          await insert([x, y - 1], [x, y]);
+          await insert([x, y + 1], [x, y]);
+
+          // 解决对角线穿透的问题
+          (!map[100 * y + x - 1] || !map[100 * (y - 1) + x]) &&
+            (await insert([x - 1, y - 1], [x, y]));
+
+          (!map[100 * y + x + 1] || !map[100 * (y + 1) + x]) &&
+            (await insert([x + 1, y + 1], [x, y]));
+
+          (!map[100 * y + x + 1] || !map[100 * (y - 1) + x]) &&
+            (await insert([x + 1, y - 1], [x, y]));
+
+          (!map[100 * y + x - 1] || !map[100 * (y + 1) + x]) &&
+            (await insert([x - 1, y + 1], [x, y]));
+        }
+
+        return null;
+      }
+
+      const inputs = document.querySelectorAll("input");
+
+      inputs.forEach((el, i) => {
+        el.addEventListener("keydown", (e) => {
+          clearStartAndEnd();
+        });
+        el.addEventListener("keyup", (e) => {
+          renderStartAndEnd();
+        });
+      });
+
+      function clearStartAndEnd() {
+        const inputs = document.querySelectorAll("input");
+        const start = [Number(inputs[0].value), Number(inputs[1].value)];
+        const end = [Number(inputs[2].value), Number(inputs[3].value)];
+        container.children[100 * start[1] + start[0]].style.backgroundColor =
+          "gray";
+        container.children[100 * end[1] + end[0]].style.backgroundColor =
+          "gray";
+      }
+
+      function renderStartAndEnd() {
+        const inputs = document.querySelectorAll("input");
+        const start = [Number(inputs[0].value), Number(inputs[1].value)];
+        const end = [Number(inputs[2].value), Number(inputs[3].value)];
+        container.children[100 * start[1] + start[0]].style.backgroundColor =
+          "#00ff00";
+        container.children[100 * end[1] + end[0]].style.backgroundColor = "red";
+      }
+
+      function run() {
+        const inputs = document.querySelectorAll("input");
+        const start = [Number(inputs[0].value), Number(inputs[1].value)];
+        const end = [Number(inputs[2].value), Number(inputs[3].value)];
+        findPath(map, start, end);
+      }
+
+      renderStartAndEnd();
+    </script>
+  </body>
+</html>

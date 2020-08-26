@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    #root {
+      display: flex;
+    }
+
+    #root>div {
+      width: 100px;
+      height: 100px;
+      border-radius: 100px;
+      background: grey;
+      margin-right: 10px;
+    }
+
+    #root>div.active:nth-of-type(1) {
+      background-color: red;
+    }
+
+    #root>div.active:nth-of-type(2) {
+      background-color: yellow;
+    }
+
+    #root>div.active:nth-of-type(3) {
+      background-color: green;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="root">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <script>
+    const sleepTime = [5, 2, 10]
+    const root = document.getElementById('root');
+    let i = 0;
+
+    const sleep = delay => new Promise(resolve => { setTimeout(() => { resolve() }, delay * 1000) })
+
+    let time = 1
+    // time
+    setInterval(() => { console.log(`${time}秒`); time++ }, 1000)
+
+    void async function run() {
+      while (i < 100) {
+        const slice = Array.prototype.slice
+        slice.call(root.children).forEach(el => el.classList.remove('active'));
+        slice.call(root.children)[i % 3].classList.add('active');
+        await sleep(sleepTime[i % 3])
+        i++
+      }
+    }()
+
+  </script>
+</body>
+
+</html>
