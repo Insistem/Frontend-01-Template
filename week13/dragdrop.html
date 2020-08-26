@@ -1,0 +1,83 @@
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  
+  <div id="container">
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字
+  </div>
+  
+  <div id="dragable" style="width: 100px; height: 100px; background-color: burlywood; display: inline-block;"></div>
+  
+  <script>
+    const dragable = document.querySelector('#dragable');
+  
+    // 开始偏移的位置，以元素的左上角为origin
+    let baseX = 0,
+      baseY = 0;
+  
+    dragable.addEventListener('mousedown', e => {
+      let startX = e.clientX,
+        startY = e.clientY;
+  
+      let move = event => {
+        let range = nearest(event.clientX, event.clientY);
+  
+        range.insertNode(dragable);
+        // 获取偏移值： 移动的xy轴各自减去开始mousedown的xy轴
+        // let x = baseX + event.clientX - startX,
+        //   y = baseY + event.clientY - startY;
+  
+        // dragable.style.transform = `translate(${x}px, ${y}px)`;
+      };
+      let up = event => {
+        // 记录上一次的偏移值
+        baseX = baseX + event.clientX - startX;
+        baseY = baseY + event.clientY - startY;
+        console.log('up -> baseY', baseX, baseY);
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up);
+      };
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up);
+    });
+  
+    let ranges = [];
+  
+    let container = document.getElementById('container');
+  
+    for (let i = 0; i < container.childNodes[0].textContent.length; i++) {
+      let range = document.createRange();
+      range.setStart(container.childNodes[0], i);
+      range.setEnd(container.childNodes[0], i);
+      // console.log(range.getBoundingClientRect())
+      ranges.push(range);
+    }
+  
+    // 当前鼠标最近的range
+    function nearest(x0, y0) {
+      let nearestRange = null;
+      let distance = Infinity;
+      for (let range of ranges) {
+        let { x, y } = range.getBoundingClientRect();
+        let d = [x0 - x] ** 2 + (y0 - y) ** 2;
+        if (d < distance) {
+          nearestRange = range;
+          distance = d;
+        }
+      }
+      return nearestRange;
+    }
+  
+    document.addEventListener('selectstart', e => e.preventDefault());
+  </script>

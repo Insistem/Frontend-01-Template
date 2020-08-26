@@ -1,0 +1,150 @@
+r:<input id="r" type="range" min="0" max="255" />
+<br />
+g:<input id="g" type="range" min="0" max="255" />
+<br />
+b: <input id="b" type="range" min="0" max="255" />
+
+<div id="color" style="width: 100px; height: 100px;"></div>
+
+<div id="text">Hello {{name}}!</div>
+
+<script>
+  let handlers = new Map();
+
+  let reactiveities = new Map();
+
+  // collect
+  let usedReactivities = [];
+
+  // Proxy 对象用于定义基本操作的自定义行为（如属性查找、赋值、枚举、函数调用等）。
+  // AOP 切面编程
+  // 实现vue的reactivty
+  function reactive(obj) {
+    // 针对两个相同的对象，proxy也相同的
+    // https://github.com/vuejs/vue-next/blob/master/packages/reactivity/__tests__/reactive.spec.ts#L71
+    if (reactiveities.has(obj)) {
+      return reactiveities.get(obj);
+    }
+
+    let proxy = new Proxy(obj, {
+      get(obj, prop) {
+        // 收集需要相应的对象属性
+        usedReactivities.push([obj, prop]);
+        if (typeof obj[prop] === "object") {
+          return reactive(obj[prop]);
+        }
+        return obj[prop];
+      },
+      set(obj, prop, val) {
+        obj[prop] = val;
+        // effect，获取handlers中的obj -> props的handler
+        const propHandlers = handlers.get(obj).get(prop);
+        for (let func of propHandlers) {
+          func.call();
+        }
+        return obj[prop];
+      },
+    });
+    reactiveities.set(obj, proxy);
+    return proxy;
+  }
+
+  function effect(handler) {
+    // 清空收集数组
+    usedReactivities = [];
+    // 执行回调函数，执行表达式proxy.a会触发get，即收集
+    handler();
+    // 将收集的obj和prop对应的handler存放在map中，注意handler是一个数组，在proxy.a setting时触发这个
+    for (let [obj, prop] of usedReactivities) {
+      if (!handlers.has(obj)) {
+        handlers.set(obj, new Map());
+      }
+      const props = handlers.get(obj);
+      if (!props.has(prop)) {
+        props.set(prop, []);
+      }
+      const propHandlers = props.get(prop);
+      propHandlers.push(handler);
+      props.set(prop, propHandlers);
+    }
+  }
+
+  // let v12, v1, v2;
+
+  // let p1 = reactive({a: 1});
+  // let p2 = reactive({a: 2});
+
+  // // 静态依赖收集
+  // effect(() => (v12 = p1.a + p2.a));
+  // effect(() => (v1 = p1.a));
+  // effect(() => (v2 = p2.a));
+  // console.log("1: v12", v12, v1, v2)
+
+  // p1.a = 11;
+  // console.log("2: v12", v12, v1, v2)
+
+  // p2.a = 12;
+  // console.log("3: v12", v12, v1, v2)
+
+  // 问题1
+  // 假如effect中的get是一个条件触发的，那么会无法收集
+  // effect(() => isTrue ? v.a : v.b)
+  // isTrue === false时，只会收集到v.b属性
+
+  // let object = {
+  //   a: {
+  //     x: 1,
+  //   },
+  // };
+  // // 问题2
+  // // 深度的对象属性无法收集
+  // let v;
+  // let p = reactive(object);
+  // effect(() => (v = p.a.x));
+  // console.log(v);
+  // p.a = { x: 4 };
+  // console.log(v);
+
+  let p = reactive({ r: 100, g: 100, b: 100 });
+
+  effect(() => {
+    document.querySelector("#r").value = p.r;
+  });
+
+  effect(() => {
+    document.querySelector("#g").value = p.g;
+  });
+
+  effect(() => {
+    document.querySelector("#b").value = p.b;
+  });
+
+  document.querySelector("#r").addEventListener("input", (e) => {
+    p.r = e.target.value;
+  });
+
+  document.querySelector("#g").addEventListener("input", (e) => {
+    p.g = e.target.value;
+  });
+
+  document.querySelector("#b").addEventListener("input", (e) => {
+    p.b = e.target.value;
+  });
+
+  effect(() => {
+    // document.querySelector('#text').innerHTML = `rgb(${p.r},${p.g},${p.b})`
+    document.querySelector(
+      "#color"
+    ).style.backgroundColor = `rgb(${p.r},${p.g},${p.b})`;
+  });
+
+  let range = document.createRange();
+  range.setStart(document.getElementById('text').childNodes[0], 6)
+  range.setEnd(document.getElementById('text').childNodes[0], 14)
+  let data = reactive({text: 'wrold'})
+
+  effect(() => {
+    range.extractContents()
+    range.insertNode(document.createTextNode(data.text))
+  })
+</script>
