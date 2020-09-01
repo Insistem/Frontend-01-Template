@@ -33,7 +33,7 @@
 #姓名：马鹏阳
 #班级：5班
 #小组：6组
-#作业&总结链接：https://github.com/Insistem/Frontend-01-Template/tree/master/week08
+#作业&总结链接：https://github.com/Insistem/Frontend-01-Template/tree/master/week15
 
 ## 术语汇总
 英文|中文|备注
