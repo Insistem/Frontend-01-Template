@@ -57,6 +57,7 @@
     <div id="board"></div>
     <div class="footer">
         <button onclick="restart()">重新开始</button>
+        <button onClick="bestChoice(pattern, color)">智能提示</button>
     </div>
     <script>
         let pattern = [
@@ -107,9 +108,15 @@
             color = 3 - color;
             willWin(pattern, color)
             show()
-
         }
-        // 落子之后，判断下是否要赢了
+        // TODO:电脑自动计算位置
+        function computerMove() {
+            const res = bestChoice(pattern, color)
+            pattern[res.point[0]][res.point[1]] = color;
+            color = 3 - color;
+            show()
+        }
+        // 落子之后，判断下自己是否要赢了
         function check(pattern, color) {
             for (let i = 0; i < 3; i++) {
                 let win = true;
@@ -161,22 +168,83 @@
             return JSON.parse(JSON.stringify(arr))
         }
         // X落棋后，判斷O是否要贏了
+        // 思路： 将所有空白的区域遍历放置一遍’O‘，如果有连成线的说明·o·要赢
         function willWin(pattern, color) {
             console.log(color)
-            let res = clone(pattern)
             for (let i = 0; i < 3; i++) {
+                let res = clone(pattern)
                 for (let j = 0; j < 3; j++) {
-                    if(pattern[i][j] !== 0) {
+                    if (pattern[i][j] !== 0) {
                         continue
                     }
                     res[i][j] = color;
                     if (check(res, color)) {
-                        console.log(`${color === 1 ? '❌' : '⭕️'}要赢了！`)
+                        // console.log(`${color === 1 ? '❌' : '⭕️'}要赢了！`)
+                        return [i, j]
                         break
                     }
-                    res[i][j] = 0;
                 }
             }
+            return null
+        }
+        // 增加棋谱功能,如果已经有历史的经验，那么就不用计算了
+        const openings = new Map()
+        // 以当前棋盘的局势和棋手作为唯一的key,最佳走法为value
+        openings.set([
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ].toString() + '1', {
+            point: [1, 1],
+            result: 0
+        })
+        // 根据当前形势，分析出当下最优走法
+        // result 为1 表示自己要赢， result为-1 表示对方要赢
+        // 可以用来完成人机对战
+        function bestChoice(pattern, color) {
+            const hash = pattern.toString() + color
+            if (openings.has(hash)) {
+                return openings.get(hash)
+            }
+            // 只要自己走一步棋就能连成线
+            let point = willWin(pattern, color)
+            let res = {}
+            // 自己要赢
+            if (point) {
+                res = {
+                    point,
+                    result: 1
+                }
+                console.log(1, res)
+                return res
+            }
+            // 自己走一步不能分出胜负，那就自己先走一步，对方再走一步，如果对方没有赢面，说明自己会赢，递归
+            let result = -1
+            outer: for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (pattern[i][j] !== 0) {
+                        continue
+                    }
+                    let temp = clone(pattern)
+                    temp[i][j] = color;
+                    let opp = bestChoice(temp, 3 - color)
+                    // 对方要赢，对面最坏的情况就是我最好的情况
+                    if (-opp.result >= result) {
+                        point = [i, j]
+                        result = -opp.result
+                    }
+                    // 输赢减枝
+                    if (result == 1) {
+                        break outer;
+                    }
+                }
+            }
+            res = {
+                point: point,
+                result: point ? result : 0
+            }
+            console.log(2, res)
+            return res
         }
 
 
